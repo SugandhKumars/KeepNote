@@ -7,25 +7,25 @@ const Input = () => {
   const { mainData, setMainData } = useContext(NoteContext);
   const [Title, setTitle] = useState("");
   const [Note, setNote] = useState("");
-  const [data, setData] = useState([]);
   const inputRef = useRef(null);
   useEffect(() => {
     if (showTitle) inputRef.current.focus();
-    if (data.length > 0) {
-      setMainData(data);
-    }
   }, [showTitle]);
   const handleShow = () => {
     setShowTitle(!showTitle);
+  };
+  const handleClose = () => {
+    setShowTitle(false);
     if (Title.trim().length > 0 || Note.trim().length) {
-      setData([...data, { Title, Note }]);
+      setMainData([...mainData, { Title, Note, id: Math.random() }]);
     }
 
     setTitle("");
     setNote("");
   };
+
   return (
-    <div className="w-full">
+    <div className="w-full relative h-screen border-2 border-red-300">
       <div className="w-[40%] flex flex-col justify-center mx-auto mt-10 border-[1px] shadow-xl  rounded-lg  ">
         {showTitle ? (
           <>
@@ -47,7 +47,7 @@ const Input = () => {
               <p>Color</p>
               <p
                 className="text-zinc-500 hover:bg-zinc-100 px-2 py-1 rounded-lg cursor-pointer"
-                onClick={() => handleShow()}
+                onClick={() => handleClose()}
               >
                 Close
               </p>
@@ -68,7 +68,12 @@ const Input = () => {
       </div>
       <div className="w-[70%] mx-auto flex flex-wrap border-2 mt-10 gap-6 p-2">
         {mainData.map((data) => (
-          <NoteCard key={Math.random()} title={data.Title} note={data.Note} />
+          <NoteCard
+            key={data.id}
+            title={data.Title}
+            note={data.Note}
+            id={data.id}
+          />
         ))}
       </div>
     </div>
