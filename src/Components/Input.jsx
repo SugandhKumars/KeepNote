@@ -23,7 +23,7 @@ const Input = () => {
     setTitle("");
     setNote("");
   };
-
+  console.log(mainData);
   return (
     <div className="w-full relative h-screen border-2 border-red-300">
       <div className="w-[40%] flex flex-col justify-center mx-auto mt-10 border-[1px] shadow-xl  rounded-lg  ">

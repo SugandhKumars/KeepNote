@@ -3,39 +3,38 @@ import { NoteContext } from "../Context/NoteContext";
 
 const NoteCard = ({ title, note, id }) => {
   const [isEdit, setIsEdit] = useState(false);
-  //   const [Title, setTitle] = useState("");
-  //   const [Note, setNote] = useState("");
-  //   const [editTitle, setEditTitle] = useState(Title);
-  //   const [editNote, setEditNote] = useState(Note);
+  const [editedTitle, setEditedTitle] = useState(title); // State variable to track edited title
+  const [editedNote, setEditedNote] = useState(note); // State variable to track edited note
+
   const { mainData, setMainData } = useContext(NoteContext);
 
   const deleteNote = (key) => {
-    let FilterData = mainData.filter((data) => data.id !== key);
-    setMainData(FilterData);
+    let filteredData = mainData.filter((data) => data.id !== key);
+    setMainData(filteredData);
   };
-  const EditNote = (key) => {
+
+  const handleEdit = () => {
     setIsEdit(true);
-    const EditedNote = mainData.filter((data) => data.id == key);
-    let title = EditedNote[0].Title;
-    let note = EditedNote[0].Note;
-    // setTitle(title);
-    // setNote(note);
   };
+
   const handleClose = () => {
     setIsEdit(false);
+    // Update the mainData state with edited values
+    const updatedData = mainData.map((data) =>
+      data.id === id ? { ...data, Title: editedTitle, Note: editedNote } : data
+    );
+    setMainData(updatedData);
   };
-  //   console.log(Title);
 
   return (
     <>
       <div className="border-[1px] rounded-lg p-2 w-[23%] min-h-28 flex flex-col gap-4">
         <p className="font-semibold w-full break-words">{title}</p>
-
         <p className="w-full break-words">{note}</p>
         <div>
           <button
             className="bg-blue-100 px-2 py-1 rounded-md ml-2"
-            onClick={() => EditNote(id)}
+            onClick={handleEdit}
           >
             Edit
           </button>
@@ -52,18 +51,22 @@ const NoteCard = ({ title, note, id }) => {
           <div className="w-[40%] bg-white rounded-lg">
             <input
               type="text"
-              className="w-[97%] flex flex-wrap text-sm   px-2 py-2 outline-none"
+              className="w-[97%] flex flex-wrap text-sm px-2 py-2 outline-none"
               placeholder="Title"
+              value={editedTitle}
+              onChange={(e) => setEditedTitle(e.target.value)}
             />
             <textarea
               className="w-[97%] px-2 py-1 outline-none "
               placeholder="Take a Note..."
+              value={editedNote}
+              onChange={(e) => setEditedNote(e.target.value)}
             ></textarea>
             <div className="flex p-2 justify-between">
               <p>Color</p>
               <p
                 className="text-zinc-500 hover:bg-zinc-100 px-2 py-1 rounded-lg cursor-pointer"
-                onClick={() => handleClose()}
+                onClick={handleClose}
               >
                 Close
               </p>
